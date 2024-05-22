@@ -34,6 +34,12 @@ def sym_encrypt(key: bytes, plain_text: bytes) -> bytes:
         nonce_length = ECIES_CONFIG.symmetric_nonce_length
         nonce = os.urandom(nonce_length)
         cipher = AES.new(key, AES_CIPHER_MODE, nonce)
+    elif algorithm == "aes-256-ecb":
+        cipher = AES.new(key, AES.MODE_ECB)
+        encrypted = cipher.encrypt(plain_text)
+        cipher_text = bytearray()
+        cipher_text.extend(encrypted)
+        return bytes(cipher_text)
     elif algorithm == "xchacha20":
         nonce = os.urandom(XCHACHA20_NONCE_LENGTH)
         cipher = ChaCha20_Poly1305.new(key=key, nonce=nonce)  # type:ignore
@@ -92,6 +98,9 @@ def sym_decrypt(key: bytes, cipher_text: bytes) -> bytes:
         tag = cipher_text[nonce_length:nonce_tag_length]
         ciphered_data = cipher_text[nonce_tag_length:]
         cipher = AES.new(key, AES_CIPHER_MODE, nonce)
+    elif algorithm == "aes-256-ecb":
+        cipher = AES.new(key, AES.MODE_ECB)
+        return cipher.decrypt(cipher_text)
     elif algorithm == "xchacha20":
         nonce_tag_length = XCHACHA20_NONCE_LENGTH + AEAD_TAG_LENGTH
         nonce = cipher_text[:XCHACHA20_NONCE_LENGTH]
