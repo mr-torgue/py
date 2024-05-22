@@ -18,6 +18,9 @@ Other language versions:
 
 You can also check a FastAPI web backend demo [here](https://github.com/kigawas/eciespy-demo).
 
+## Changes
+Added support for AES128-ECB mode.
+
 ## Install
 
 `pip install eciespy`
